@@ -2,7 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
 const Login = () => {
-    const [login, setLogin] = useState(false)
+    const [login, setLogin] = useState(null)
     const loginSubmit = async (e) => {
         e.preventDefault()
         let username = document.getElementById("username").value;

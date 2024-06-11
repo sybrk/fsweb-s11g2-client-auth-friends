@@ -4,7 +4,7 @@ import { Redirect } from "react-router-dom/cjs/react-router-dom.min"
 const FriendsList = () => {
 
     const [friends, setFriends] = useState([])
-    const [login, setLogin] = useState(false)
+    const [login, setLogin] = useState(null)
 
     useEffect(() => {
         const storage = JSON.parse(localStorage.getItem("s11g2"))
@@ -37,7 +37,7 @@ const FriendsList = () => {
     return (
         <>
         {
-            login
+            (login === false)
             ?
                 friends.length && friends.map(friend => {
                     return(
@@ -45,7 +45,7 @@ const FriendsList = () => {
                     )
                 })
             :
-            console.log("hello")
+            <Redirect to="/login" />
             
         }
             

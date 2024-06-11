@@ -7,6 +7,8 @@ import './App.css';
 import Login from "./components/Login";
 import Home from "./components/Home";
 import FriendsList from "./components/FriendsList";
+import AddFriend from "./components/AddFriend";
+import Logout from "./components/Logout";
 
 function App() {
   return (
@@ -15,6 +17,8 @@ function App() {
         <Link to="/">Home</Link>
         <Link to="/login">Login</Link>
         <Link to="/friendslist">Friends List</Link>
+        <Link to="/addfriend">Add Friend</Link>
+        <Link to="/logout">Logout</Link>
      
       <Switch>
         <Route path="/login">
@@ -22,6 +26,12 @@ function App() {
         </Route>
         <Route path="/friendslist">
           <FriendsList />
+        </Route>
+        <Route path="/addfriend">
+          <AddFriend />
+        </Route>
+        <Route path="/logout">
+          <Logout />
         </Route>
         <Route path="/">
           <Home />
