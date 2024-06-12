@@ -1,54 +1,58 @@
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import { Redirect } from "react-router-dom/cjs/react-router-dom.min"
+import { LoginContext } from "./../contexts/LoginProvider"
 const FriendsList = () => {
 
     const [friends, setFriends] = useState([])
-    const [login, setLogin] = useState(null)
+    const { login, storage } = useContext(LoginContext)
 
     useEffect(() => {
-        const storage = JSON.parse(localStorage.getItem("s11g2"))
-        if (storage?.token) {
-            setLogin(true)
-            console.log(login)
+
+        if (login) {
             axios.get('http://localhost:9000/api/friends', {
-            headers: {
-                authorization: storage.token
-            }
-        })
-            .then(function (response) {
-                // handle success
-                if(response.status == 200) {
-                    console.log(response)
-                    setFriends(response.data)
+                headers: {
+                    authorization: storage.token
                 }
             })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
-                setLogin(false)
-            })
+                .then(function (response) {
+                    // handle success
+                    if (response.status == 200) {
+                        console.log(response)
+                        setFriends(response.data)
+                    }
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
         }
-        
-       
-        
+
+
+
 
     }, [])
     return (
         <>
-        {
-            (login === false)
-            ?
-                friends.length && friends.map(friend => {
-                    return(
-                        <p key={friend.id}>{friend.name} - {friend.email}</p>
-                    )
-                })
-            :
-            <Redirect to="/login" />
-            
-        }
-            
+            {
+                (login === true)
+                    ?
+                    <div className="flex flex-col items-center px-10">
+                        <h1 className="text-7xl font-extrabold mb-3 mt-5">FRIENDS LIST</h1>
+                        <div className="flex flex-col items-start gap-3 text-3xl">
+                        {friends.length && friends.map(friend => {
+                            return (
+                                <p className="uppercase font-bold" key={friend.id}>- {friend.name} - {friend.email}</p>
+                            )
+                        })}
+                        </div>
+                    </div>
+                    :
+                    <Redirect to="/login" />
+                //console.log("hello")
+
+            }
+
         </>
     )
 }

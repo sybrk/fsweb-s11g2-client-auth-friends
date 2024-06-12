@@ -1,31 +1,32 @@
 import axios from "axios"
-import { useEffect, useState } from "react"
+import { useEffect, useContext } from "react"
 import { Redirect } from "react-router-dom/cjs/react-router-dom.min"
-
+import {LoginContext} from "./../contexts/LoginProvider"
+import { toast, ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 const AddFriend = () => {
-    const storage = JSON.parse(localStorage.getItem("s11g2"))
-    const [login, setLogin] = useState(null)
+   
+    const {login, storage} = useContext(LoginContext)
 
     useEffect(() => {
-        if (storage?.token) {
+        if (login) {
             console.log(login)
-            setLogin(true)
         }
     },[storage])
-    const loginSubmit = (e) => {
+    const friendSubmit = (e) => {
         e.preventDefault()
-        const friendName = document.getElementById("friendName").value;
-        const friendAge = document.getElementById("friendAge").value;
-        const friendMail = document.getElementById("email").value;
+        const friendName = document.getElementById("friendName");
+        const friendAge = document.getElementById("friendAge");
+        const friendMail = document.getElementById("email");
         const id = Date.now()
-        console.log(storage.token)
+        
         
         axios.post('http://localhost:9000/api/friends',
              {
                 id: id,
-                name: friendName,
-                age: friendAge,
-                email: friendMail
+                name: friendName.value,
+                age: friendAge.value,
+                email: friendMail.value
             },
             {
             headers: {
@@ -35,7 +36,13 @@ const AddFriend = () => {
         
         )
         .then(response => {
-            console.log(response)
+            if(response.status == 200) {
+                friendAge.value = "";
+                friendMail.value = "";
+                friendName.value = "";
+                toast("Friend Added")
+                
+            }
         })
         .catch(error => {
             console.log(error)
@@ -45,19 +52,22 @@ const AddFriend = () => {
     return (
         <>
         {
-            (login === false)
+            (login === true)
             ?
-            <div>
-                <h1>ADD FRIEND</h1>
-            <form onSubmit={loginSubmit}>
-                <label htmlFor="friendName">Friend Name</label>
-                <input id="friendName" type="text" />
-                <label htmlFor="friendAge">Friend Age</label>
-                <input id="friendAge" type="number" />
-                <label htmlFor="email">Friend Email</label>
-                <input id="email" type="email" />
-                <button>Submit</button>
+            <div className="flex flex-col items-center">
+                <h1 className="text-7xl font-extrabold mb-3 mt-5">ADD FRIEND</h1>
+            <form onSubmit={friendSubmit}>
+            <div className="flex flex-col items-start gap-1">
+                <label htmlFor="friendName" className="font-bold text-3xl">FRIEND NAME</label>
+                <input id="friendName" type="text" className="bg-black  text-white w-80 py-3" />
+                <label htmlFor="friendAge" className="font-bold text-3xl">FRIEND AGE</label>
+                <input id="friendAge" type="number" className="bg-black  text-white w-80 py-3" />
+                <label htmlFor="email" className="font-bold text-3xl">FRIEND EMAIL</label>
+                <input id="email" type="email" className="bg-black  text-white w-80 py-3" />
+                <button className="bg-black mt-2 text-white min-w-80 px-10 py-3">SUBMIT</button>
+                </div>
             </form>
+            <ToastContainer />
             </div>
             :
             <Redirect to="/login"/>

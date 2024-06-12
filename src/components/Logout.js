@@ -1,13 +1,15 @@
 import axios from "axios"
-import { useState } from "react"
+import { useContext } from "react"
+
 import { Redirect } from "react-router-dom/cjs/react-router-dom.min"
+import { LoginContext } from "../contexts/LoginProvider"
 
 
 
 const Logout = () => {
 
-    const storage = JSON.parse(localStorage.getItem("s11g2"))
-    const [login, setLogin] = useState(true)
+    const {login, setLogin, storage} = useContext(LoginContext)
+    
     if (storage?.token) {
         axios.post('http://localhost:9000/api/logout',
             {
